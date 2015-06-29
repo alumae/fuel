@@ -75,13 +75,18 @@ class PytablesDataset(Dataset):
         .. note:: The best performance if `request` is a slice.
 
         """
+        # Try to convert a list to slice, since there could be a huge 
+        # performance difference
+        if isinstance(request, list):
+          if numpy.all(numpy.arange(request[0], request[0] + len(request)) == numpy.array(request)):
+            request = slice(request[0], request[-1])
         if isinstance(request, slice):
             request = slice(request.start + self.start,
                             request.stop + self.start, request.step)
             data = [node[request] for node in self.nodes]
         elif isinstance(request, list):
             request = [index + self.start for index in request]
-            data = [node[request, ...] for node in self.nodes]
+            data = [node[request] for node in self.nodes]
         else:
             raise ValueError
         return data

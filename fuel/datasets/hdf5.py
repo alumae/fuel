@@ -79,7 +79,7 @@ class PytablesDataset(Dataset):
         # performance difference
         if isinstance(request, list):
           if numpy.all(numpy.arange(request[0], request[0] + len(request)) == numpy.array(request)):
-            request = slice(request[0], request[-1])
+            request = slice(request[0], request[0] + len(request))
         if isinstance(request, slice):
             request = slice(request.start + self.start,
                             request.stop + self.start, request.step)
